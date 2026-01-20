@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body style="text-align: center; margin-top: 50px;">
+<h2>Razorpay Integration</h2>
+<input type="number" id="amt" value="500">
+<button id="pay-btn">Pay Now</button>
+
+<script>
+    $('#pay-btn').click(function() {
+        var amount = $('#amt').val();
+        $.post('/create_order', {amount: amount}, function(data) {
+            var res = JSON.parse(data);
+            var options = {
+                "key": "rzp_test_S69WnuWrzuF2ta",
+                "amount": res.amount,
+                "currency": "INR",
+                "name": "Sayed's Project",
+                "order_id": res.id,
+                "handler": function (response){
+                    alert("Payment Success! ID: " + response.razorpay_payment_id);
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        });
+    });
+</script>
+</body>
+</html>
